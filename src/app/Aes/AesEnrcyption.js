@@ -8,7 +8,7 @@ const AESEncryption=()=>{
     var iv   = CryptoJS.enc.Hex.parse("253D3FB468A0E246");
 
     const [text,setText]=useState("")
-    const [mode,setMode]=useState("cbc")
+    const [mode,setMode]=useState("")
     const [enctyptedMsg,setEncryptedMsg]=useState(null)
     const [decryptedMsg,setDecryptedMsg]=useState(null)
     const [inputFile,setInputFile]=useState(null)
@@ -104,7 +104,7 @@ const AESEncryption=()=>{
                     mode:CryptoJS.mode.OFB
             });
 
-            decryptedMsg(decrypted.toString(CryptoJS.enc.Utf8))
+            setDecryptedMsg(decrypted.toString(CryptoJS.enc.Utf8))
         }
 
     }
@@ -214,103 +214,91 @@ const AESEncryption=()=>{
 
 
 
-    return(
-<div className='w-full flex felx-col'>
+    return (
+      <div className="w-[80%] min-h-[85vh] flex flex-col ring-2 p-8 rounded-lg shadow-2xl">
+        <div className="  flex flex-col text-left space-y-4">
+          <h1 className="flex text-xl font-bold">Select Encryption Mode</h1>
+          <select
+            onChange={handleOptionChange}
+            value={mode}
+            className=" flex items-center appearance-none bg-white border border-gray-300 px-4 py-2 pr-8 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition ease-in-out duration-300"
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            <option value="cbc">CBC</option>
+            <option value="cfb">CFB</option>
+            <option value="ofb">OFB</option>
+          </select>
+        </div>
 
-<div className="  flex felx-col text-left">
-    <h1 className='flex '>Select Encryption Mode</h1>
-      <select
-        onChange={handleOptionChange}
-        value={mode}
-        className="appearance-none bg-white border border-gray-300 felx px-4 py-2 pr-8 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition ease-in-out duration-300"
-      >
-        <option value="" disabled>Select an option</option>
-        <option value="cbc">CBC</option>
-        <option value="cfb">CFB</option>
-        <option value="ofb">OFB</option>
-      </select>
-      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-        <svg className="fill-current h-4 w-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-          <path d="M6.4 7.6L10 11.2l3.6-3.6L15 9.2l-5 5-5-5z" />
-        </svg>
+        <div className="flex flex-col w-full space-y-5 ">
+          <h1 className=" text-lg font-semibold pt-5">
+            Enter The Encrypted Text
+          </h1>
+          <textarea
+            onChange={(e) => textAreaHandler(e)}
+            className="border-5 w-full pl-4 pt-3 text-lg font-medium flex bg-slate-200 border-black"
+          ></textarea>
+          <div className=" w-[10rem] h-[3rem] bg-[#32C4BE] rounded-md text-white text-xl font-semibold hover:bg-black flex justify-center items-center">
+            <button onClick={textAreaOnClickHandlerEncrypt}>Encrypt</button>
+          </div>
+          <div>
+            <h1 className=" text-xl font-semibold">The Encrypted Message</h1>
+          </div>
+          <div className=" text-lg font-medium">
+            {enctyptedMsg ? <p>{enctyptedMsg}</p> : <p></p>}
+          </div>
+        </div>
+        <div className="flex flex-col w-full space-y-5 pt-10">
+          <h1 className=" text-xl font-semibold">
+            Enter Decrypted Message Text
+          </h1>
+          <textarea
+            onChange={(e) => textAreaHandler(e)}
+            className="border-5 w-full felx pl-5 pt-3 bg-slate-200 border-black"
+          ></textarea>
+          <div className="w-[10rem] h-[3rem] bg-[#5395B2] text-white text-xl font-semibold rounded-md hover:bg-black flex justify-center items-center">
+            <button onClick={textAreaOnClickHandlerDecrypt}>Decrypt</button>
+          </div>
+          <div>
+            <h1 className=" text-xl font-semibold">The Decrypted Message</h1>
+          </div>
+          <div className=" text-lg font-medium">
+            {decryptedMsg ? <p>{decryptedMsg}</p> : <p></p>}
+          </div>
+        </div>
+        <div className=" flex flex-col justify-center items-center space-y-5 pt-5">
+          <div className=" text-3xl font-bold">Enter the Input File</div>
+          <div>
+            <input onChange={(e) => inputFileHandler(e)} type="file" />
+          </div>
+          <div className=" w-[10rem] h-[3rem] bg-violet-600 text-white text-xl font-semibold rounded-md flex justify-center items-center hover:bg-black">
+            <button onClick={encryptFileHandler}>Encrypt</button>
+          </div>
+        </div>
+
+        <div className=" flex flex-col justify-center items-center space-y-3 pt-8">
+          <h1 className=" text-3xl font-bold">Enter the Encrypted File</h1>
+          <div className=" pt-5">
+            <input onChange={(e) => inputFileHandler(e)} type="file" />
+          </div>
+          <div className=" bg-sky-700 text-white w-[10rem] h-[3rem] flex justify-center items-center rounded-md text-xl font-semibold  hover:bg-black">
+            <button onClick={decryptFileHandler}>Decrypt</button>
+          </div>
+          {inputFile && inputFile.type.startsWith("image") && (
+            <img src={decryptedFile} alt="Decrypted  Media" />
+          )}
+          {inputFile && inputFile.type.startsWith("audio") && (
+            <audio controls src={decryptedFile}></audio>
+          )}
+          {inputFile && inputFile.type.startsWith("video") && (
+            <video controls src={decryptedFile}></video>
+          )}
+          {/* {decryptedFile&&<img src={decryptedFile} style={{ maxWidth: '100%' }}  />} */}
+        </div>
       </div>
-    </div>
-
-        <div className='flex flex-col w-full'>
-            <div>Enter The Encrypted Text</div>
-            <textarea onChange={(e)=>textAreaHandler(e)} className='border-5 w-full felx bg-slate-200 border-black'>
-
-            </textarea>
-            <div>
-
-                <button className='border-5 border-r-black' onClick={textAreaOnClickHandlerEncrypt}>
-                    Encrypt
-                </button>
-            </div>
-            <div>
-                <h1>The Encrypted Message</h1>
-            </div>
-            <div>
-                {enctyptedMsg?<p>{enctyptedMsg}</p>:<p></p>}
-            </div>
-        </div>
-        <div className='flex flex-col w-full'>
-            <div>Enter Decrypted Message Text</div>
-            <textarea onChange={(e)=>textAreaHandler(e)} className='border-5 w-full felx bg-slate-200 border-black'>
-
-            </textarea>
-            <div>
-
-                <button className='border-5 border-r-black' onClick={textAreaOnClickHandlerDecrypt}>
-                    Decrypt
-                </button>
-            </div>
-            <div>
-                <h1>The Decrypted Message</h1>
-            </div>
-            <div>
-                {decryptedMsg?<p>{decryptedMsg}</p>:<p></p>}
-            </div>
-        </div>
-        <div>
-        <div>
-
-            Enter the Input File:
-        </div>
-            <div>
-            
-                <input onChange={(e)=>inputFileHandler(e)} type='file'/>
-
-            </div>
-            <div>
-                <button onClick={encryptFileHandler}>
-                    Encrypt
-                </button>
-            </div>
-        </div>
-
-        <div>
-        <div>
-
-            Enter the Encrypted File:
-        </div>
-            <div>
-            
-                <input onChange={(e)=>inputFileHandler(e)} type='file'/>
-
-            </div>
-            <div>
-                <button onClick={decryptFileHandler}>
-                    Decrypt
-                </button>
-            </div>
-            {inputFile && inputFile.type.startsWith('image') && <img src={decryptedFile} alt="Decrypted  Media" />}
-          {inputFile && inputFile.type.startsWith('audio') && <audio controls src={decryptedFile}></audio>}
-          {inputFile && inputFile.type.startsWith('video') && <video controls src={decryptedFile}></video>}
-            {/* {decryptedFile&&<img src={decryptedFile} style={{ maxWidth: '100%' }}  />} */}
-        </div>
-    </div>
-    )
+    );
 
 
 
