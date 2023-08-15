@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image'
-import AES from './Aes/aes'
+// import AES from './Aes/aes'
 import AESEncryption from './Aes/AesEnrcyption'
 export default function Home() {
   return (
